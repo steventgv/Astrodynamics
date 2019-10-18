@@ -1,0 +1,16 @@
+# Homework 3 problem 3
+from astropy import units as u
+from poliastro.bodies import Earth, Sun
+from poliastro.twobody import Orbit
+from datetime import datetime, date, timedelta
+a = 17.9564 * u.AU
+ecc = 0.967298 * u.one
+inc = 0 * u.deg
+raan = 0 * u.deg
+argp = 0 * u.deg
+nu = 0 * u.deg
+ss = Orbit.from_classical(Sun, a, ecc, inc, raan, argp, nu)
+print(ss.period.to(u.day))
+t1 = date(year = 1986, month = 2, day = 9)
+t2=t1 + timedelta(days=27792)
+t2
