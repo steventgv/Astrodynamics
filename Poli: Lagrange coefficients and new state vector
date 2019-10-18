@@ -1,0 +1,18 @@
+# Midterm take home
+from poliastro.core import propagation
+import astropy.units as u
+import numpy as np
+r = [9672, 4320, -8691] * u.km
+v = [-3.040, 3.330, 0.6299] * u.km / u.s
+
+k = Earth.k.to(u.km**3 / u.s**2)
+tof = 108*3600*u.s
+lagrange=propagation.kepler(k.value,r,v,tof,100)
+
+print("Lagrange coefficients:")
+print(lagrange,"\n")
+non_r = np.array([9672, 4320, -8691])
+non_v = np.array([-3.040, 3.330, 0.6299])
+print("New state vector")
+print(non_r*(lagrange[0])+non_v*(lagrange[1]))
+print(non_r*(lagrange[2])+non_v*(lagrange[3]))
