@@ -1,0 +1,21 @@
+# Midterm take home
+import numpy as np
+import astropy.units as u
+from poliastro.twobody import Orbit
+from poliastro.bodies import Earth
+r = [9672, 4320, -8691] * u.km
+v = [-3.040, 3.330, 0.6299] * u.km / u.s
+ss = Orbit.from_vectors(Earth, r, v)
+'''print('a=',ss.a)
+print('e=',ss.ecc)
+print('i=',ss.inc.to(u.deg))
+print('RAAN=',ss.raan.to(u.deg))
+print('AOP=',ss.argp.to(u.deg))'''
+print('TA=',ss.nu.to(u.deg))
+ss_108h = ss.propagate(108 * u.hour)
+nu = ss_108h.nu
+print('new TA=',ss_108h.nu.to(u.deg),'\n')
+s2=Orbit.from_classical(Earth,ss.a,ss.ecc,ss.inc.to(u.deg),ss.raan.to(u.deg),ss.argp.to(u.deg),nu)
+print("New state vector")
+print(s2.r)
+print(s2.v)
