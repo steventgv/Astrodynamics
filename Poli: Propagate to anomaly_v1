@@ -1,0 +1,17 @@
+# Homework 3 problem 1
+from astropy import units as u
+from poliastro.bodies import Earth
+from poliastro.twobody import Orbit
+from poliastro.examples import molniya
+m_p=molniya.period.to(u.min)
+print(m_p)
+nu2=145*u.deg
+s2=molniya.propagate_to_anomaly(nu2) #propagate from 80 to -35 degrees
+#molniya.nu.to(u.deg)
+#(s2.epoch-molniya.epoch).to(u.min)
+nu3=215*u.deg
+s3=s2.propagate_to_anomaly(nu3) #propagate from -35 to 35 degrees
+t=(s3.epoch-s2.epoch).to(u.min)
+print(t)
+t/m_p
+#s3.plot()
