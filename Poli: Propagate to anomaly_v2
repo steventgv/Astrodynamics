@@ -1,0 +1,22 @@
+# Homework 3 problem 1
+from astropy import units as u
+from poliastro.bodies import Earth
+from poliastro.twobody import Orbit
+ra=(40000+6371)
+rp=(500+6371)
+a = (ra+rp)/2 * u.km
+ecc = (ra-rp)/(ra+rp) * u.one
+inc = 63.4 * u.deg
+raan = 0 * u.deg
+argp = 0 * u.deg
+nu1 = 145 * u.deg
+nu2 = 215 * u.deg
+s1 = Orbit.from_classical(Earth, a, ecc, inc, raan, argp, nu1)
+A=s1.period.to(u.min)
+print(A)
+s2=s1.propagate_to_anomaly(nu2)
+s2.nu.to(u.deg)
+B=(s2.epoch-s1.epoch).to(u.min)
+print(B)
+#s2.plot()
+B/A
