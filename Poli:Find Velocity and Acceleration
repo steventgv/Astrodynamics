@@ -1,0 +1,25 @@
+# Homework 2 Problem 5
+from astropy import units as u
+from poliastro.bodies import Earth, Mars, Sun
+from poliastro.twobody import Orbit
+import numpy as np
+ra=24000
+rp=8000
+
+a = 16000 * u.km
+ecc = (ra-rp)/(ra+rp) * u.one
+inc = 0 * u.deg
+raan = 0 * u.deg
+argp = 0 * u.deg
+nu = 0 * u.deg
+
+s1 = Orbit.from_classical(Earth, a, ecc, inc, raan, argp, nu)
+s2 = s1.propagate(1 * u.min)
+deltaV=np.linalg.norm(s2.v-s1.v)*u.km/u.s
+acc=deltaV/(60*u.s)
+print(s1)
+print("ecc=",ecc)
+print("r=",np.linalg.norm(s1.r)*u.km,"\n")
+
+print("acceleration=",acc)
+print("velocity=",np.linalg.norm(s1.v)*u.km/u.s)
