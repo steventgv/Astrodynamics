@@ -1,0 +1,13 @@
+# Homework 3 problem 1
+#給角度求時間
+import numpy as np
+mu=398600
+a = 26621
+ecc = 0.742
+TA=np.radians(145)
+
+E=2*np.arctan(np.sqrt((1-ecc)/(1+ecc))*np.tan(TA/2))
+Me=E-ecc*np.sin(E)
+n=np.sqrt(mu)/(a**1.5)
+t=Me/n # Time since periapsis
+print(t/60,"min")
