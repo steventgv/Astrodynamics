@@ -1,0 +1,5 @@
+# Midterm take home
+# from Mean anomaly to Eccentric anomaly
+# Kepler's equation
+from poliastro.core import angles
+angles.M_to_E(1.64, 0.426)
