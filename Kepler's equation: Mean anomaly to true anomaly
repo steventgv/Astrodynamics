@@ -1,0 +1,17 @@
+# Midterm take home
+# Algorithm 3.1 Kepler's equation
+# from Mean anomaly to Eccentric anomaly
+#給時間求角度
+import numpy as np
+def kepler_E(M,e):
+    error=0.00000001
+    if M<np.pi:
+        E=M+e/2
+    else:
+        E=M-e/2
+    ratio=1
+    while np.abs(ratio)>error:
+        ratio=(E-e*np.sin(E)-M)/(1-e*np.cos(E))
+        E=E-ratio
+    return E
+kepler_E(1.64,0.426)
