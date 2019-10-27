@@ -1,0 +1,21 @@
+# Homework 4 problem 2
+# Lambert's problem
+from poliastro import iod
+from astropy import units as u
+import numpy as np
+from poliastro.bodies import Earth
+k = Earth.k.to(u.km**3 / u.s**2)
+r1 = np.array([5000, 10000, 2100])*u.km #Initial position vector
+r2 = np.array([-14600, 2500, 7000])*u.km #Final position vector
+tof = 3600*u.s #Time of flight
+(v1, v2), = iod.lambert(Earth.k, r1, r2, tof)
+print("v1=",v1)
+print("v2=",v2,"\n")
+
+ss = Orbit.from_vectors(Earth, r1, v1)
+print('a=',ss.a)
+print('e=',ss.ecc)
+print('i=',ss.inc.to(u.deg))
+print('RAAN=',ss.raan.to(u.deg))
+print('AOP=',ss.argp.to(u.deg))
+print('TA=',ss.nu.to(u.deg))
