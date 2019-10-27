@@ -1,0 +1,42 @@
+# Homework 4 problem 1
+def S(z):
+    if z>0:
+         s=(np.sqrt(z)-np.sin(np.sqrt(z)))/np.sqrt(z)**3
+    elif z<0:
+         s=(np.sinh(np.sqrt(-z))-np.sqrt(-z))/np.sqrt(-z)**3
+    else:
+        s=1/6
+    return s
+
+def C(z):
+    if z>0:
+         c=(1-np.cos(np.sqrt(z)))/z
+    elif z<0:
+         c=(np.cosh(np.sqrt(-z))-1)/(-z)
+    else:
+        c=1/2
+    return c
+
+mu=398600
+error=0.00000001
+nMax=1000
+dt=3600
+x=np.sqrt(mu)*np.abs(a)*dt
+n=0
+ratio=1
+r0=10000
+vr0=3.0752
+a=-1/19655
+while np.abs(ratio)>error and n<=nMax:
+    n=n+1
+    Z=a*x**2
+    c=C(Z)
+    s=S(Z)
+    F=r0*vr0/np.sqrt(mu)*x**2*c+(1-a*r0)*x**3*s+r0*x-np.sqrt(mu)*dt
+    dFdx=r0*vr0/np.sqrt(mu)*x*(1-a*x**2*s)+(1-a*r0)*x**2*c+r0
+    ratio=F/dFdx
+    x=x-ratio
+if n>nMax:
+    print("failed")
+    print(F/dFdx)
+x
