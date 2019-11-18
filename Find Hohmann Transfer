@@ -1,0 +1,20 @@
+# Homework 5 problem 4
+from poliastro.maneuver import Maneuver
+from poliastro.twobody import Orbit
+from poliastro.bodies import Earth
+from astropy import units as u
+import matplotlib.pyplot as plt
+from poliastro.plotting.static import StaticOrbitPlotter
+ss_i = Orbit.circular(Earth, 300 * u.km)
+hoh = Maneuver.hohmann(ss_i, 9378 * u.km)
+print(hoh.get_total_cost())
+print(hoh.get_total_time())
+ss_f = ss_i.apply_maneuver(hoh)
+print(ss_f)
+
+ss_a, ss_f = ss_i.apply_maneuver(hoh, intermediate=True)
+plotter=StaticOrbitPlotter(dark=True)
+plotter.plot(ss_i, label="Initial orbit")
+plotter.plot(ss_a, label="Transfer orbit")
+plotter.plot(ss_f, label="Final orbit")
+hoh.impulses
