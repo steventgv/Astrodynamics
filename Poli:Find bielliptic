@@ -1,0 +1,10 @@
+# Homework 5 problem 5
+from poliastro.maneuver import Maneuver
+from poliastro.twobody import Orbit
+from poliastro.bodies import Earth
+from astropy import units as u
+ss_i = Orbit.circular(Earth, alt=300 * u.km)
+bi = Maneuver.bielliptic(ss_i,12402*u.km, 9378 * u.km)
+print(bi.get_total_cost())
+print(bi.get_total_time())
+bi.impulses
