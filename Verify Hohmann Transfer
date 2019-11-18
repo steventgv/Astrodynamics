@@ -1,0 +1,29 @@
+# Homework 5 problem 4
+from astropy import units as u
+from poliastro.bodies import Earth, Sun
+from poliastro.core import propagation
+from poliastro.twobody import Orbit
+from poliastro.maneuver import Maneuver
+from poliastro.plotting.static import StaticOrbitPlotter
+a = 6678 * u.km
+ecc = 0 * u.one
+inc = 0 * u.deg
+raan = 0 * u.deg
+argp = 0 * u.deg
+nu = 0 * u.deg
+ss1 = Orbit.from_classical(Earth, a, ecc, inc, raan, argp, nu)
+
+dv1 = [0, 0.62432313692, 0] * u.km / u.s
+man1 = Maneuver.impulse(dv1)
+ss2=ss1.apply_maneuver(man1)
+ss3=ss2.propagate(3579*u.s)
+dv2 = [0, -0.57334180559, 0] * u.km / u.s
+man2 = Maneuver.impulse(dv2)
+ss4=ss3.apply_maneuver(man2)
+
+plotter=StaticOrbitPlotter(dark=True)
+plotter.plot(ss1)
+plotter.plot_trajectory(ss3.sample(50, min_anomaly=0*u.deg, max_anomaly=180*u.deg))
+plotter.plot(ss4)
+print(ss1)
+print(ss4)
