@@ -1,0 +1,22 @@
+# Homework 5 problem 6
+from astropy import units as u
+from poliastro.bodies import Earth, Sun
+from poliastro.core import propagation
+from poliastro.twobody import Orbit
+a = 15000 * u.km
+ecc = 0 * u.one
+inc = 0 * u.deg
+raan = 0 * u.deg
+argp = 0 * u.deg
+nu = 122.2 * u.deg
+ss1 = Orbit.from_classical(Earth, a, ecc, inc, raan, argp, nu)
+
+dv1 = [-0.7, 2.7, 0] * u.km / u.s
+man1 = Maneuver.impulse(dv1)
+ss2=ss1.apply_maneuver(man1)
+
+plotter=StaticOrbitPlotter(dark=True)
+plotter.plot(ss1)
+plotter.plot(ss2)
+print(ss1)
+print(ss2)
