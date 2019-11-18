@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('dark_background')
+R=np.linspace(1,20,100)
+dv1=np.sqrt(2*R/(1+R))-1+np.sqrt(1/R)*(1-np.sqrt(2/(1+R)))
+plt.plot(R,dv1)
+
+S=5
+dv2=(np.sqrt(2*R*S/(1+R*S))-1+np.sqrt(1/(R*S))*(np.sqrt(2/(1+S))-np.sqrt(2/(1+R*S)))+(np.sqrt(2*S/(R+R*S))-np.sqrt(1/R)))
+plt.plot(R,dv2,"r--")
+
+S=10
+dv3=(np.sqrt(2*R*S/(1+R*S))-1+np.sqrt(1/(R*S))*(np.sqrt(2/(1+S))-np.sqrt(2/(1+R*S)))+(np.sqrt(2*S/(R+R*S))-np.sqrt(1/R)))
+plt.plot(R,dv3,"y--")
+
+S=40
+dv4=(np.sqrt(2*R*S/(1+R*S))-1+np.sqrt(1/(R*S))*(np.sqrt(2/(1+S))-np.sqrt(2/(1+R*S)))+(np.sqrt(2*S/(R+R*S))-np.sqrt(1/R)))
+plt.plot(R,dv4,"w--")
+
+S=100
+dv5=(np.sqrt(2*R*S/(1+R*S))-1+np.sqrt(1/(R*S))*(np.sqrt(2/(1+S))-np.sqrt(2/(1+R*S)))+(np.sqrt(2*S/(R+R*S))-np.sqrt(1/R)))
+plt.plot(R,dv5,"m--")
+
+S=1000
+dv6=(np.sqrt(2*R*S/(1+R*S))-1+np.sqrt(1/(R*S))*(np.sqrt(2/(1+S))-np.sqrt(2/(1+R*S)))+(np.sqrt(2*S/(R+R*S))-np.sqrt(1/R)))
+plt.plot(R,dv6,"b--")
+
+fig = plt.gcf()
+fig.set_size_inches(8,5) #(11,8)
+#plt.savefig("Hohmann and Bielliptic.pdf")
+plt.show()
+#http://www.anilvrao.com/resources/EAS4510-Course-Notes.pdf
