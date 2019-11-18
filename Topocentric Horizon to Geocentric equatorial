@@ -1,0 +1,22 @@
+# Homework 5 problem 1
+import numpy as np
+phi=np.radians(-20)
+theta=np.radians(60.5014)
+A=np.radians(145.970)
+a=np.radians(44.2734)
+Range=410.596
+
+QxX=np.array([[-np.sin(theta),-np.sin(phi)*np.cos(theta),np.cos(phi)*np.cos(theta)],
+             [np.cos(theta),-np.sin(phi)*np.sin(theta),np.cos(phi)*np.sin(theta)],
+             [0,np.cos(phi),np.sin(phi)]])
+
+rho_x=np.transpose(np.array([np.cos(a)*np.sin(A),np.cos(a)*np.cos(A),np.sin(a)]))
+
+rho=np.dot(QxX,rho_x)*Range
+
+H=0.5
+R1=(H+6378/np.sqrt(1-0.0067*np.sin(phi)**2))*np.cos(phi)
+R2=(H+6378*0.99330524/np.sqrt(1-0.0067*np.sin(phi)**2))*np.sin(phi)
+R=np.array([np.cos(theta)*R1,np.sin(theta)*R1,R2])
+r=rho+R
+r
