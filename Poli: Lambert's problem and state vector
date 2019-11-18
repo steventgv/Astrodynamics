@@ -19,3 +19,8 @@ print('i=',ss.inc.to(u.deg))
 print('RAAN=',ss.raan.to(u.deg))
 print('AOP=',ss.argp.to(u.deg))
 print('TA=',ss.nu.to(u.deg))
+nu2=0*u.deg
+s=Orbit.from_classical(Earth,ss.a,ss.ecc,ss.inc.to(u.deg),ss.raan.to(u.deg),ss.argp.to(u.deg),nu2)
+s2=s.propagate_to_anomaly(ss.nu)
+print((s2.epoch-s.epoch).to(u.s))
+(s2.epoch-s.epoch).to(u.s)-ss.period.to(u.s)
