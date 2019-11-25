@@ -18,18 +18,18 @@ mu=mu1+mu2;
 W=sqrt(mu/r12^3);
 x1=-pi_2*r12;
 x2=pi_1*r12;
-x3=r12*cosd(60);
+x3=r12*cosd(60)-pi_2*r12;
 y3=r12*sind(60);
 
 d0=200;
 v0=10.91;
 t0=0;
 
-for i=0:20
-    phi=-49+0.1*i;
-    for j=0:20
-        gamma=9+0.1*j;
-        tf=3.48*days;
+for i=0:50
+    phi=-48+0.1*i;
+    for j=0:50
+        gamma=8+0.1*j;
+        tf=3.43*days;
         r0=rearth+d0;
         x=r0*cosd(phi)+x1;
         y=r0*sind(phi);
