@@ -1,0 +1,154 @@
+function Lagrange_Loop
+
+days=24*3600;
+rmoon=1737;
+rearth=6378;
+r12=384400;
+m1=5974e21;
+m2=7348e19;
+
+M=m1+m2;
+pi_1=m1/M;
+pi_2=m2/M;
+
+mu1=398600;
+mu2=4903.02;
+mu=mu1+mu2;
+
+W=sqrt(mu/r12^3);
+x1=-pi_2*r12;
+x2=pi_1*r12;
+x3=r12*cosd(60);
+y3=r12*sind(60);
+
+d0=200;
+v0=10.91;
+t0=0;
+
+for i=0:20
+    phi=-49+0.1*i;
+    for j=0:20
+        gamma=9+0.1*j;
+        tf=3.48*days;
+        r0=rearth+d0;
+        x=r0*cosd(phi)+x1;
+        y=r0*sind(phi);
+        vx=v0*(sind(gamma)*cosd(phi)-cosd(gamma)*sind(phi));
+        vy=v0*(sind(gamma)*sind(phi)+cosd(gamma)*cosd(phi));
+        f0=[x;y;vx;vy];
+        [t,f] = rkf45(@rates, [t0 tf], f0);
+        x=f(:,1);
+        y=f(:,2);
+        vx=f(:,3);
+        vy=f(:,4);
+
+        xf=x(end);
+        yf=y(end);
+        vxf=vx(end);
+        vyf=vy(end);
+
+        df=norm([xf-x3,yf-y3]);
+        vf=norm([vxf,vyf]);
+        if df<500            
+            output
+        end
+    end    
+    
+    x=r0*cosd(phi)+x1;
+    y=r0*sind(phi);
+    vx=v0*(sind(gamma)*cosd(phi)-cosd(gamma)*sind(phi));
+    vy=v0*(sind(gamma)*sind(phi)+cosd(gamma)*cosd(phi));
+    f0=[x;y;vx;vy];
+    [t,f] = rkf45(@rates, [t0 tf], f0);
+    x=f(:,1);
+    y=f(:,2);
+    vx=f(:,3);
+    vy=f(:,4);
+    xf=x(end);
+    yf=y(end);
+    vxf=vx(end);
+    vyf=vy(end);
+
+    df=norm([xf-x3,yf-y3]);
+    vf=norm([vxf,vyf]);
+    if df<500            
+            output
+        end
+    
+end
+
+
+function dfdt=rates(t,f)
+x=f(1);
+y=f(2);
+vx=f(3);
+vy=f(4);
+
+
+r1=norm([x+pi_2*r12,y]);
+r2=norm([x-pi_1*r12,y]);
+ax=2*W*vy+W^2*x-mu1*(x-x1)/r1^3-mu2*(x-x2)/r2^3;
+ay=-2*W*vx+W^2*y-(mu1/r1^3+mu2/r2^3)*y;
+
+dfdt=[vx;vy;ax;ay];
+end
+% ~~~~~~~~~~~~~
+function output
+% ~~~~~~~~~~~~~
+%{
+  This subfunction echos the input data and prints the results to the
+  command window. It also plots the trajectory.
+  User M-functions required: none
+  User subfunction required: circle
+%}
+% -------------
+
+fprintf('------------------------------------------------------------')
+fprintf('\n phi = %g', phi)
+fprintf('\n gamma = %g', gamma)
+fprintf('\n tf = %g', tf/days)
+fprintf('\n df = %g', df)
+fprintf('\n vf = %g', vf)
+fprintf('\n------------------------------------------------------------\n')
+
+%...Plot the trajectory and place filled circles representing the earth
+%   and moon on the the plot:
+plot(x, y)
+%   Set plot display parameters
+xmin = -20.e3;  xmax =  4.e5;
+ymin = -20.e3;  ymax =  3.5e5;
+axis([xmin xmax ymin ymax])
+axis equal
+xlabel('x, km'); ylabel('y, km')
+grid on
+hold on
+
+%...Plot the earth (blue) and moon (green) to scale
+earth  = circle(x1, 0, rearth);
+moon   = circle(x2, 0, rmoon);
+L4=circle(x3,y3,2000);
+fill(earth(:,1), earth(:,2),'b')
+fill( moon(:,1),  moon(:,2),'g')
+fill( L4(:,1),  L4(:,2),'g')
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function xy = circle(xc, yc, radius)
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%{
+  This subfunction calculates the coordinates of points spaced
+  0.1 degree apart around the circumference of a circle
+  x,y    - x and y coordinates of a point on the circumference
+  xc,yc  - x and y coordinates of the center of the circle
+  radius - radius of the circle
+  xy     - an array containing the x coordinates in column 1 and the 
+           y coordinates in column 2
+  User M-functions required: none
+%}
+% ----------------------------------
+x      = xc + radius*cosd(0:0.1:360);
+y      = yc + radius*sind(0:0.1:360);
+xy     = [x', y'];
+
+end %circle
+
+end %output
+end
