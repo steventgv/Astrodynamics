@@ -1,0 +1,117 @@
+import numpy as np
+import scipy
+from scipy.integrate import odeint
+from scipy.optimize import brentq
+from scipy.optimize import fsolve
+import matplotlib.pyplot as plt
+def rates(f, dt):
+    x=f[0]
+    y=f[1]
+    vx=f[2]
+    vy=f[3]
+    r1=np.sqrt((x + pi_2*r12)**2+ y**2)
+    r2=np.sqrt((x - pi_1*r12)**2+ y**2)
+    ax=(2 * W * vy + W ** 2 *x-mu1*(x-x1)/r1 ** 3 - mu2 *(x-x2)/r2**3)
+    ay=(-2 * W * vx + W ** 2 * y - (mu1 /r1**3+mu2/r2**3)*y)
+    dfdt=np.transpose([vx,vy,ax,ay])    
+    return dfdt
+    
+days=24*3600
+rearth = 6378  #  radius of the earth in km
+rmoon = 1737  #  radius of the moon in km
+r12 = 384400  #  distance between the CoM of the earth and moon
+m1 = 5.974 * 10 ** 24  #  mass of the earth
+m2 = 7.348 * 10 ** 22  #  mass of the moon
+M = m1 + m2
+pi_1 = m1 / M
+pi_2 = m2 / M
+mu1 = 398600  #  gravitational parameter of earth km^3/sec^2
+mu2 = 4903.2  #  grav param of the moon
+mu=mu1+mu2
+W = np.sqrt(mu / r12 ** 3)
+x1=-pi_2*r12
+x2=pi_1*r12
+x3=r12*np.cos(np.radians(60))+x1
+y3=r12*np.sin(np.radians(60))
+A=[]
+B=[]
+C=[]
+
+for i in np.arange(-48.5, -45.5, 0.1):
+    phi = np.radians(i)
+    for j in np.arange(8,11,0.1):
+        gamma = np.radians(j)  #  angle in radians of the flight path
+        tf=3.43*days #6.08
+        t0=0
+        d0 = 200  #  distance the spacecraft is above the Earth
+        v0 = 10.91
+        vx = v0 * (np.sin(gamma) * np.cos(phi) - np.cos(gamma) * np.sin(phi))
+        vy = v0 * (np.sin(gamma) * np.sin(phi) + np.cos(gamma) * np.cos(phi))
+        r0=rearth+d0
+        x = r0*np.cos(phi)+x1
+        y = r0 * np.sin(phi)
+        f0 = np.transpose([x, y, vx, vy])
+        dt = np.linspace(t0,tf,int(tf)) 
+        f = odeint(rates, f0, dt)
+        X=f[:,0]
+        Y=f[:,1]
+        Vx=f[:,2]
+        Vy=f[:,3]
+        Xf  = X[-1]
+        Yf  = Y[-1]
+        Vxf = Vx[-1]
+        Vyf = Vy[-1]
+        df  = np.linalg.norm([Xf - x3, Yf - y3])
+        vf  = np.linalg.norm([Vxf, Vyf])
+        if df<500:
+            A.append([np.degrees(phi),np.degrees(gamma),tf/86400,df,vf])
+            B.append(X)
+            C.append(Y)
+            
+    tf=3.43*days #6.08
+    t0=0
+    d0 = 200  #  distance the spacecraft is above the Earth
+    v0 = 10.91
+    vx = v0 * (np.sin(gamma) * np.cos(phi) - np.cos(gamma) * np.sin(phi))
+    vy = v0 * (np.sin(gamma) * np.sin(phi) + np.cos(gamma) * np.cos(phi))
+    r0=rearth+d0
+    x = r0*np.cos(phi)+x1
+    y = r0 * np.sin(phi)
+    f0 = np.transpose([x, y, vx, vy])
+    dt = np.linspace(t0,tf,int(tf)) 
+    f = odeint(rates, f0, dt)
+    X=f[:,0]
+    Y=f[:,1]
+    Vx=f[:,2]
+    Vy=f[:,3]
+    Xf  = X[-1]
+    Yf  = Y[-1]
+    Vxf = Vx[-1]
+    Vyf = Vy[-1]
+    df  = np.linalg.norm([Xf - x3, Yf - y3])
+    vf  = np.linalg.norm([Vxf, Vyf])
+    if df<500:
+        A.append([np.degrees(phi),np.degrees(gamma),tf/86400,df,vf])
+        B.append(X)
+        C.append(Y)
+print('There are ',len(A),'solutions')
+
+circle1=plt.Circle((x1,0), 6378, color='b',fill=True)
+circle2=plt.Circle((x2,0), 1737, color='w',fill=True)
+circle3=plt.Circle((x3,y3), 1737, color='w',fill=True)
+fig=plt.gcf()
+fig.gca().add_artist(circle1)
+fig.gca().add_artist(circle2)
+fig.gca().add_artist(circle3)
+for i in range(len(A)):
+    plt.plot(B[i],C[i])
+#plt.xlim(-10000,420000)
+#plt.ylim(-10000,420000)
+plt.axis('equal')
+"Adding an axes using the same arguments as a previous axes "
+plt.show()
+
+import pandas as pd
+df=pd.DataFrame(A)
+df.columns=['phi','gamma','tf','df','vf']
+df
